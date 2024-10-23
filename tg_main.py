@@ -5,8 +5,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 import os
 #tg_token = os.environ.get("TOKEN")
-tg_token = "5522797685:AAGoF-k4cyVPt9Kp3adiq3pD7DxQCDJAu4M"
-#tg_token = "2141929246:AAF58byIwXeLG7sUgFYtm5cqgh0-vjq67Wo"
+tg_token = "token"
 #
 
 admins = [447392189, 1087504926]
