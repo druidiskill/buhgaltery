@@ -1,3 +1,6 @@
+import ast
+import datetime
+
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -11,7 +14,7 @@ from tg_main import bot, admins, teachers
 import datetime as dt
 from db import get_all_teachers_names, get_teacher_info, get_students_ID_by_teacher_ID, get_student_by_id, \
     get_teacher_by_id, get_lesson_by_IDS, add_abonement, print_results, get_new_student, get_all_students, \
-    get_all_teachers, write_st_ls, get_all_lessons, get_student_by_family_and_name
+    get_all_teachers, write_st_ls, get_all_lessons, get_student_by_family_and_name, add_pay_lesson_history
 
 admin_router = Router()
 
@@ -197,6 +200,16 @@ async def print_info_about_student(callback: CallbackQuery):
 async def add_lessons_callback(callback: CallbackQuery):
     await callback.message.delete()
     data = callback.data.split("_")[1:]
+    if int(data[0]) != 42:
+        info_less = await get_teacher_by_id(id_teach=int(data[1]))
+        price_one = info_less[3]
+        if info_less[7] != '':
+            temp_dict = ast.literal_eval(info_less[7])
+            if int(data[0]) in temp_dict:
+                price_one = ast.literal_eval(info_less[7])[int(data[0])][0]
+        summ = int(data[2]) * price_one
+        print(summ)
+        add_pay_lesson = await add_pay_lesson_history(id_stud=int(data[0]), id_teach=int(data[1]), date=dt.datetime.now().strftime("%d.%m.%Y"), summ=summ)
     add_lessons_res = await add_abonement(id_stud=int(data[0]), id_teach=int(data[1]), num_lessons=int(data[2]))
     if add_lessons_res:
         await callback.message.answer(f"Добавлено {data[2]} урок(ов)")
@@ -305,4 +318,3 @@ async def must_pay(callback:CallbackQuery):
         await callback.message.answer(text=text[half_text_num:])
 
     await callback.message.answer(text=await main())
-

@@ -336,9 +336,21 @@ async def update_hi_mess(tg_id:int):
 
 
 
+async def add_pay_lesson_history(id_stud:int, id_teach, date:str, summ:int):
+    db = await aiosqlite.connect("db.db")
+    cursor = await db.execute(f"INSERT INTO history_pay (id_stud, id_teach, date_pay, summ) VALUES ({id_stud}, {id_teach}, '{date}',  {summ})")
+    await db.commit()
+    await cursor.close()
+    await db.close()
+
+    return True
 
 
-#print(asyncio.run(print_results(num_weeks=(1))))
+
+
+
+
+#print(asyncio.run(add_pay_lesson_history(id_stud=44, id_teach=18, date="29.10.2024", summ=1000)))
 
 
 

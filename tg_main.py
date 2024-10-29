@@ -4,8 +4,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 import os
-#tg_token = os.environ.get("TOKEN")
-tg_token = "token"
+tg_token = os.environ.get("TOKEN")
 #
 
 admins = [447392189, 1087504926]
