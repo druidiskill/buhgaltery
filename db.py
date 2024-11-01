@@ -59,6 +59,20 @@ async def get_student_by_id(id_stud:int, column:str="*"):
     return info
 
 
+
+async def db_take_injection(data:str):
+    db = await aiosqlite.connect("db.db")
+    cursor = await db.execute(data)
+    if "SELECT" in data:
+        info = await cursor.fetchall()
+    else:
+        info = await db.commit()
+    await cursor.close()
+    await db.close()
+
+    return info
+
+
 async def get_teacher_by_id(id_teach:int, column:str="*"):
     db = await aiosqlite.connect("db.db")
     cursor = await db.execute(f"SELECT {column} FROM teachers WHERE ID={id_teach}")

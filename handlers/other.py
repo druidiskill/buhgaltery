@@ -3,7 +3,7 @@ from aiogram.filters import Command
 
 from aiogram.types import Message, MessageEntity
 from tg_main import bot, admins, teachers
-from db import get_students_by_tg_ids, update_hi_mess, get_all_students
+from db import get_students_by_tg_ids, update_hi_mess, get_all_students, db_take_injection
 
 other_router = Router()
 
@@ -11,6 +11,19 @@ other_router = Router()
 @other_router.message(Command("start"))
 async def test_start(message:Message):
     print(message.text)
+
+
+
+@other_router.message(F.text.startswith("injection\n"))
+async def take_injection(message:Message):
+    if message.from_user.id in admins:
+        data = message.text[10:]
+        result = await db_take_injection(data=data)
+        if len(str(result)) > 4096:
+            for x in range(0, len(str(result)), 4096):
+                await message.answer(str(result)[x:x + 4096])
+        else:
+            await message.answer(str(result))
 
 
 @other_router.message(F.text.startswith("send_all"))
